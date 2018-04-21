@@ -1,0 +1,19 @@
+**/.idea
+**.iml
+**/target
+
+# Mac
+.DS_Store
+  
+# Maven
+**/log/
+**/target/
+
+#Gradle
+**/build/
+**/gradle/
+**/.gradle/
+
+*.jar
+proguard_map.txt
+proguard_seed.txt
