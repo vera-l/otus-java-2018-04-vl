@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.regex.*;
 
 public class StringTutor  {
-	private final static String REGEXP = "^Привет, ?[A-ZА-Я][a-zа-я]{3,} [A-ZА-Я][a-zа-я]{3,} ?!$";
+	private final static String REGEXP = "^Привет, ?[A-ZА-Я][a-zа-я]{2,} [A-ZА-Я][a-zа-я]{2,}(?:-[A-ZА-Я][a-zа-я]{2,})? ?!$";
 	private final static Pattern pattern = Pattern.compile(REGEXP);
 
 	public static void log(String s) {
