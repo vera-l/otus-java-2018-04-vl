@@ -15,5 +15,6 @@
 **/.gradle/
 
 *.jar
+*.class
 proguard_map.txt
 proguard_seed.txt
