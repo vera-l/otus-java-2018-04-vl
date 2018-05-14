@@ -13,7 +13,6 @@ class MyArrayList<E> implements List<E> {
     private final static int CAPACITY_MULTIPLIER = 2;
 
     private int size;
-    private int capacity;
     private Object[] data;
 
 
@@ -234,7 +233,7 @@ class MyArrayList<E> implements List<E> {
     }
 
     public int capacity() {
-        return capacity;
+        return data.length;
     }
 
     private void checkCapacity(int delta) {
@@ -244,29 +243,91 @@ class MyArrayList<E> implements List<E> {
 
         int newSize = size + delta;
 
-        if (newSize <= capacity) {
+        if (newSize <= data.length) {
             return;
         }
 
-        while (newSize > capacity) {
-            capacity *= CAPACITY_MULTIPLIER;
+        int newCapacity = data.length;
+        while (newSize > newCapacity) {
+            newCapacity *= CAPACITY_MULTIPLIER;
         }
 
-        Object[] new_data = new Object[capacity];
+        Object[] new_data = new Object[newCapacity];
         System.arraycopy(data, 0, new_data, 0, size);
         data = new_data;
     }
 
     private void setDefaultList() {
-        capacity = DEFAULT_CAPACITY;
         size = 0;
-        data = new Object[capacity];
+        data = new Object[DEFAULT_CAPACITY];
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
+    }
+
+    public class MyIterator<E> implements Iterator<E> {
+        protected List<E> list;
+        protected int current;
+
+        public MyIterator(List<E> l) {
+            list = l;
+            current = -1;
+        }
+        public boolean hasNext() {
+            return current < list.size() - 1;
+        }
+
+        public E next() {
+            return list.get(++current);
+        }
+
+        public void remove() {
+            list.remove(--current);
+        }
+    }
+
+    public class MyListIterator<E> extends MyIterator<E> implements ListIterator<E> {
+
+        public MyListIterator(List<E> l) {
+            super(l);
+        }
+
+        public MyListIterator(int index, List<E> l) {
+            super(l);
+            current = index;
+        }
+
+        public void add(E e) {
+            list.add(e);
+        }
+
+        public boolean hasPrevious() {
+            return current > 0;
+        }
+
+        public int nextIndex() {
+            return current + 1;
+        }
+
+        public E previous() {
+            return list.get(--current);
+        }
+
+        public int previousIndex() {
+            return current - 1;
+        }
+
+        public void remove() {
+            list.remove(current);
+        }
+
+        public void set(E e) {
+            list.set(current, e);
+        }
+
     }
 
 }

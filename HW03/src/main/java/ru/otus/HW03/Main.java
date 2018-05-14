@@ -1,7 +1,11 @@
 package ru.otus.HW03;
 
 import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 
 public class Main {
     private static MyArrayList<String> list = new MyArrayList<>();
@@ -65,7 +69,7 @@ public class Main {
         System.out.println(list.containsAll(hashSet));
 
         System.out.println("> Get an iterator and print all elements");
-        MyIterator<String> iterator = list.iterator();
+        Iterator<String> iterator = list.iterator();
         while (iterator.hasNext()) {
             System.out.println(iterator.next());
         }
@@ -89,19 +93,39 @@ public class Main {
         System.out.println("> Convert this list to this array:");
         System.out.println(Arrays.toString(list.toArray()));
 
-        System.out.println("Compare list to {\"3\",\"4\"}");
+        System.out.println("> Compare list to {\"3\",\"4\"}");
         System.out.println(
             list.equals(
                 new MyArrayList(new String[]{"3", "4"})
             )
         );
 
-        System.out.println("Compare list to {\"5\",\"4\"}");
+        System.out.println("> Compare list to {\"5\",\"4\"}");
         System.out.println(
             list.equals(
                 new MyArrayList(new String[]{"5", "4"})
             )
         );
+
+        System.out.println("> Add \"a\", \"b\" by Collections.addAll()");
+        Collections.addAll(list, "a", "b");
+        printListInfo();
+
+        ArrayList<String> anotherList = new ArrayList<>();
+        anotherList.add("7");
+        anotherList.add("5");
+        anotherList.add("3");
+        System.out.println("Copy items of another list by Collections.copy()");
+        Collections.copy(list, anotherList);
+        printListInfo();
+
+        System.out.println("> Sort list elements by Collections.sort()");
+        Collections.sort(list, new Comparator<String>() {
+            public int compare(String o1, String o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        printListInfo();
 
         System.out.println("> Clear list");
         list.clear();
