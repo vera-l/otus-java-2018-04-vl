@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>HW04</name>
+    <description>Code example for HW04</description>
+
+    <developers>
+        <developer>
+            <name>Vera Lobacheva</name>
+        </developer>
+    </developers>
+
+    <groupId>ru.otus</groupId>
+    <artifactId>HW04</artifactId>
+    <version>2018-04</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
+    </properties>
+
+    <build>
+        <finalName>${project.name}</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-Xms25m</argument>
+                        <argument>-Xmx100m</argument>
+                        <argument>-XX:MaxMetaspaceSize=50m</argument>
+                        <argument>-XX:+HeapDumpOnOutOfMemoryError</argument>
+                        <argument>-XX:HeapDumpPath=heapdump.log</argument>
+                        <argument>-XX:+Use${myGCType}</argument>
+                        <argument>-verbose:gc</argument>
+                        <argument>-Xlog:gc:gc.log</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>ru.otus.HW04.Main</argument>
+                        <argument>${defined}</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

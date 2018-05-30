@@ -16,5 +16,6 @@
 
 *.jar
 *.class
+*.log*
 proguard_map.txt
 proguard_seed.txt
