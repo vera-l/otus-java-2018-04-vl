@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.lang.IndexOutOfBoundsException;
 
-class MyArrayList<E> implements List<E> {
+public class MyArrayList<E> implements List<E> {
     private final static int DEFAULT_CAPACITY = 5;
     private final static int CAPACITY_MULTIPLIER = 2;
 
