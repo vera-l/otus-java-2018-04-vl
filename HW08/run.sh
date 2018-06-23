@@ -1,3 +1,3 @@
 #! /bin/bash
 
-mvn clean compile exec:java
+mvn clean compile exec:java test

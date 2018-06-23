@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import ru.otus.HW08.person.Person;
 import ru.otus.HW08.person.Address;
 import ru.otus.HW08.person.Phone;
+import org.json.JSONObject;
+
 
 public class Main {
 
     public static void main(String... args) {
         Person person = getSomePerson();
-        String jsonString = JsonLib.toJson(person);
-        JsonLib.prettyPrintJson(jsonString);
+        String jsonString = JsonLib.toJson(person).toString();
+        prettyPrintJson(jsonString);
     }
 
     private static Person getSomePerson() {
@@ -47,5 +49,10 @@ public class Main {
         person.setIds(new int[]{123, 456, 789});
 
         return person;
+    }
+
+    public static void prettyPrintJson(String jsonString) {
+        JSONObject jsonObject = new JSONObject(jsonString);
+        System.out.println(jsonObject.toString(4));
     }
 }
