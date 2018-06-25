@@ -1,5 +1,10 @@
 package ru.otus.HW04;
 
+import com.sun.management.GarbageCollectionNotificationInfo;
+
+import javax.management.NotificationEmitter;
+import javax.management.NotificationListener;
+import javax.management.openmbean.CompositeData;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
@@ -11,10 +16,14 @@ import java.util.TimerTask;
 public class Test {
     private final int DEFAULT_ITER_SIZE = 120;
     private final int SLEEP_MILLIS = 10;
+    private final int STATS_TIME_ITERATION_MS = 60_000;
+    private final int TIME_RESERVE = 2_000;
+    private int stats_time_iteration;
     private ArrayList<Long> data;
     private Long currentItemValue;
     private int iterSize;
     private long startTime;
+    GCStatistics stats;
 
     public Test() {
         this.iterSize = DEFAULT_ITER_SIZE;
@@ -28,19 +37,47 @@ public class Test {
         data = new ArrayList<>();
         currentItemValue = 0L;
         startTime = System.currentTimeMillis();
+        stats_time_iteration = 1;
+        stats = new GCStatistics();
+
+        List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
+        for (GarbageCollectorMXBean gcBean : gcBeans) {
+            NotificationEmitter emitter = (NotificationEmitter) gcBean;
+
+            NotificationListener listener = (notification, handback) -> {
+                if (notification.getType().equals(GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION)) {
+                    GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from(
+                        (CompositeData) notification.getUserData()
+                    );
+
+                    stats.add(
+                        info.getGcAction().replace("end of ", ""),
+                        info.getGcName(),
+                        info.getGcCause(),
+                        info.getGcInfo().getDuration()
+                    );
+
+                }
+            };
+
+            emitter.addNotificationListener(listener, null, null);
+
+        }
+
 
         if (durationMs != null) {
             Timer timer = new Timer();
             TimerTask exitApp = new TimerTask() {
                 public void run() {
-                    printGCstatistics(ManagementFactory.getGarbageCollectorMXBeans(), durationMs);
                     System.exit(0);
                 }
             };
             timer.schedule(exitApp, new Date(
-                System.currentTimeMillis() + durationMs)
+                System.currentTimeMillis() + durationMs + TIME_RESERVE)
             );
         }
+
+        runStatsCalc(true);
 
         while(true) {
             data.addAll(addItems());
@@ -50,6 +87,28 @@ public class Test {
                 printIterInfo();
             }
         }
+    }
+
+    private void runStatsCalc(boolean isFirstRun) {
+        if (isFirstRun) {
+            stats.printHeader();
+        }
+
+        Timer timer = new Timer();
+        TimerTask printStatForIteration = new TimerTask() {
+            public void run() {
+                stats.print(stats_time_iteration);
+                stats.nullify();
+                stats_time_iteration++;
+                runStatsCalc(false);
+            }
+        };
+        timer.schedule(
+            printStatForIteration,
+            new Date(
+                System.currentTimeMillis() + STATS_TIME_ITERATION_MS
+            )
+        );
     }
 
     private ArrayList<Long> addItems() {
@@ -68,34 +127,4 @@ public class Test {
         );
     }
 
-    private void printGCstatistics(List<GarbageCollectorMXBean> gcBeans, int durationMs) {
-        System.out.println("------------------------------------------------" +
-            "-------------------------------");
-        System.out.println(
-            String.format(
-                "%-25s %-10s %-12s %-10s %-12s",
-                "name",
-                "count",
-                "count/min",
-                "time, ms",
-                "time/min, ms"
-            )
-        );
-        System.out.println("------------------------------------------------" +
-            "-------------------------------");
-        for (GarbageCollectorMXBean gcBean : gcBeans) {
-            System.out.println(
-                String.format(
-                    "%-25s %-10s %-12.2f %-10s %-12.2f",
-                    gcBean.getName(),
-                    gcBean.getCollectionCount(),
-                    (double) gcBean.getCollectionCount() * 1000 / durationMs,
-                    gcBean.getCollectionTime(),
-                    (double) gcBean.getCollectionTime() * 1000 / durationMs
-                )
-            );
-        }
-        System.out.println("------------------------------------------------" +
-            "-------------------------------");
-    }
 }

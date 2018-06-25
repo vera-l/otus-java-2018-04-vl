@@ -1,8 +1,5 @@
 package ru.otus.HW04;
 
-import javax.management.NotificationEmitter;
-import java.lang.management.GarbageCollectorMXBean;
-import java.util.List;
 import java.lang.management.ManagementFactory;
 
 public class Main {

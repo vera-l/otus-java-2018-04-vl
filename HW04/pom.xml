@@ -46,7 +46,7 @@
                         <argument>-XX:+HeapDumpOnOutOfMemoryError</argument>
                         <argument>-XX:HeapDumpPath=heapdump.log</argument>
                         <argument>-XX:+Use${myGCType}</argument>
-                        <argument>-verbose:gc</argument>
+                        <!--argument>-verbose:gc</argument-->
                         <argument>-Xlog:gc:gc.log</argument>
                         <argument>-classpath</argument>
                         <classpath/>
