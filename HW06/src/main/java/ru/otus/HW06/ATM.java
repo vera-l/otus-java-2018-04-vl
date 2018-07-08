@@ -7,15 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class ATM {
+public class ATM {
     private final ArrayList<Slot> slots;
+    private HashMap<Banknote, Integer> initState;
     private final List<Banknote> FACES_VALUES = Arrays.asList(Banknote.values());
     private final static String MONEY_SIGN = "\uD83D\uDCB5";
     private final static String ERROR_SIGN = "\uD83D\uDEAB";
     private final static String PRINT_DELIMITER = "\n------------------\n";
 
-    ATM() {
+    public ATM(HashMap<Banknote, Integer> initState) {
         slots = new ArrayList<>();
+        this.initState = initState;
         FACES_VALUES.forEach(
             item -> slots.add(new Slot(item))
         );
@@ -23,6 +25,16 @@ class ATM {
             slots,
             (slot1, slot2) -> slot1.getBanknote().getFaceValue() > slot2.getBanknote().getFaceValue() ? -1 : 1
         );
+        reset();
+    }
+
+    public void reset() {
+        for(Slot slot : slots) {
+            Integer countFromInitState = this.initState.get(slot.getBanknote());
+            slot.set(
+                countFromInitState == null ? 0 : countFromInitState
+            );
+        }
     }
 
     public int getSum() {
@@ -122,6 +134,14 @@ class ATM {
         }
 
         return countToSlots;
+    }
+
+    public boolean isStateEquals(HashMap<Banknote, Integer> state) {
+        return slots.stream().allMatch(
+            slot -> slot.getCount() == (
+                state.get(slot.getBanknote()) == null ? 0 : state.get(slot.getBanknote())
+            )
+        );
     }
 
     public String getNoNeededSumMessage(int sum) {

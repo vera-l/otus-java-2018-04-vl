@@ -1,34 +1,44 @@
 package ru.otus.HW06;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ATMTests {
 
-    private ATM atm;
-
-    @Before
-    public void setup() {
-        atm = new ATM();
-    }
-
     @Test
     public void shouldPutAnyNumberOfBanknotes() {
-        atm.put(Banknote.N50, 2);
-        atm.put(Banknote.N100, 3);
-        atm.put(Banknote.N200, 4);
-        atm.put(Banknote.N500, 1);
+        ATM atm = new ATM(
+            new HashMap<>(
+                Map.ofEntries(
+                    Map.entry(Banknote.N50, 2),
+                    Map.entry(Banknote.N100, 3),
+                    Map.entry(Banknote.N200, 3),
+                    Map.entry(Banknote.N500, 1)
+                )
+            )
+        );
 
-        Assert.assertEquals(atm.getSum(), 1700);
+        atm.put(Banknote.N100, 1);
+        atm.put(Banknote.N500, 2);
+
+        Assert.assertEquals(atm.getSum(), 2600);
     }
 
     @Test
     public void shouldTakeBanknotes() throws NoNeededSumException {
-        atm.put(Banknote.N50, 3);
-        atm.put(Banknote.N100, 2);
-        atm.put(Banknote.N200, 5);
-        atm.put(Banknote.N500, 10);
+        ATM atm = new ATM(
+            new HashMap<>(
+                Map.ofEntries(
+                    Map.entry(Banknote.N50, 3),
+                    Map.entry(Banknote.N100, 2),
+                    Map.entry(Banknote.N200, 5),
+                    Map.entry(Banknote.N500, 10)
+                )
+            )
+        );
 
         Assert.assertEquals(atm.getSum(), 6350);
 
@@ -42,10 +52,16 @@ public class ATMTests {
 
     @Test(expected = NoNeededSumException.class)
     public void shouldFailForBadNumberOfBanknotes() throws NoNeededSumException {
-        atm.put(Banknote.N50, 4);
-        atm.put(Banknote.N100, 7);
-        atm.put(Banknote.N200, 2);
-        atm.put(Banknote.N500, 8);
+        ATM atm = new ATM(
+            new HashMap<>(
+                Map.ofEntries(
+                    Map.entry(Banknote.N50, 4),
+                    Map.entry(Banknote.N100, 7),
+                    Map.entry(Banknote.N200, 2),
+                    Map.entry(Banknote.N500, 8)
+                )
+            )
+        );
 
         Assert.assertEquals(atm.getSum(), 5300);
 
@@ -54,10 +70,16 @@ public class ATMTests {
 
     @Test(expected = NoNeededSumException.class)
     public void shouldFailForTooBigSumOfBanknotes() throws NoNeededSumException {
-        atm.put(Banknote.N50, 4);
-        atm.put(Banknote.N100, 7);
-        atm.put(Banknote.N200, 2);
-        atm.put(Banknote.N500, 8);
+        ATM atm = new ATM(
+            new HashMap<>(
+                Map.ofEntries(
+                    Map.entry(Banknote.N50, 4),
+                    Map.entry(Banknote.N100, 7),
+                    Map.entry(Banknote.N200, 2),
+                    Map.entry(Banknote.N500, 8)
+                )
+            )
+        );
 
         Assert.assertEquals(atm.getSum(), 5300);
 

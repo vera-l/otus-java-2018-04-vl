@@ -1,6 +1,6 @@
 package ru.otus.HW06;
 
-enum Banknote {
+public enum Banknote {
 
     N50(50),
     N100(100),

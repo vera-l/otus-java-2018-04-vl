@@ -1,10 +1,10 @@
 package ru.otus.HW06;
 
-class Slot {
+public class Slot {
     private Banknote banknote;
     private int count;
 
-    Slot(Banknote banknote) {
+    public Slot(Banknote banknote) {
         this.banknote = banknote;
         this.count = 0;
     }
@@ -22,6 +22,13 @@ class Slot {
             throw new IndexOutOfBoundsException();
         }
         this.count += itemsCount;
+    }
+
+    public void set(int itemsCount) {
+        if (itemsCount < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        this.count = itemsCount;
     }
 
     public void take(int itemsCount) throws NoNeededSumException {

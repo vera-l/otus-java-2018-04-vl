@@ -1,8 +1,10 @@
 package ru.otus.HW06;
 
+import java.util.HashMap;
+
 class Main {
     public static void main(String... args) {
-        ATM atm = new ATM();
+        ATM atm = new ATM(new HashMap<>());
 
         System.out.println("Добавляем банкноты:");
         atm.put(Banknote.N50, 3);
