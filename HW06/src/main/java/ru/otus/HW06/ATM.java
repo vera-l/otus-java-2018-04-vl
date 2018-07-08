@@ -3,12 +3,13 @@ package ru.otus.HW06;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 class ATM {
-    private ArrayList<Slot> slots;
-    private List<Banknote> FACES_VALUES = Arrays.asList(Banknote.values());
+    private final ArrayList<Slot> slots;
+    private final List<Banknote> FACES_VALUES = Arrays.asList(Banknote.values());
     private final static String MONEY_SIGN = "\uD83D\uDCB5";
     private final static String ERROR_SIGN = "\uD83D\uDEAB";
     private final static String PRINT_DELIMITER = "\n------------------\n";
@@ -37,36 +38,48 @@ class ATM {
     }
 
     public void put(Banknote banknote, int count) {
-        getSlotForBanknote(banknote).put(count);
+        try {
+            getSlotForBanknote(banknote).put(count);
+        } catch (SlotNotFoundException e) {
+            System.out.println("Banknote is bad");
+        }
     }
 
-    private Slot getSlotForBanknote(Banknote banknote) {
+    private Slot getSlotForBanknote(Banknote banknote) throws SlotNotFoundException {
         Slot banknoteSlot = slots.stream().filter(
             slot -> slot.getBanknote() == banknote
         ).findAny().orElse(null);
 
         if(banknoteSlot == null) {
-            throw new Error("Неправильная банкнота");
+            throw new SlotNotFoundException("Неправильная банкнота");
         }
 
         return banknoteSlot;
     }
 
     public int getSlotBanknotesCount(Banknote banknote) {
-        return getSlotForBanknote(banknote).getCount();
+        try {
+            return getSlotForBanknote(banknote).getCount();
+        } catch (SlotNotFoundException e) {
+            System.out.println("Slot is not found");
+            return 0;
+        }
+
     }
 
-    public int take(int sum) {
-        try {
-            if (!isPossibleToTakeSum(sum)) {
-                System.out.println(ERROR_SIGN + " Нельзя выдать данную сумму ("
-                    + String.valueOf(sum) + ") " + ERROR_SIGN);
-                return -1;
-            }
+    public int take(int sum) throws NoNeededSumException {
+        if (sum > getSum()) {
+            throw new NoNeededSumException();
+        }
 
-            getRemainsAfterIterateOverSlots(sum, true);
-        } catch (NoNeededSumException e) {
-            return -1;
+        HashMap countToSlots = getCountToSlotsMapForSum(sum);
+
+        for(Slot slot : slots) {
+            Object i = countToSlots.get(slot);
+            if (i == null) {
+                continue;
+            }
+            slot.take((int) i);
         }
 
         return sum;
@@ -77,10 +90,17 @@ class ATM {
             return false;
         }
 
-        return getRemainsAfterIterateOverSlots(sum, false) == 0;
+        try {
+            getCountToSlotsMapForSum(sum);
+            return true;
+        } catch (NoNeededSumException e) {
+            return false;
+        }
     }
 
-    private int getRemainsAfterIterateOverSlots(int sum, boolean isExecute) throws NoNeededSumException {
+    private HashMap<Slot, Integer> getCountToSlotsMapForSum(int sum) throws NoNeededSumException {
+        HashMap<Slot, Integer> countToSlots = new HashMap<>();
+
         for(Slot slot : slots) {
             int faceValue = slot.getBanknote().getFaceValue();
             int count = sum / faceValue;
@@ -93,14 +113,20 @@ class ATM {
                 count = slot.getCount();
             }
 
-            if(isExecute) {
-                slot.take(count);
-            }
-
+            countToSlots.put(slot, count);
             sum -= faceValue * count;
         }
 
-        return sum;
+        if (sum != 0) {
+            throw new NoNeededSumException();
+        }
+
+        return countToSlots;
+    }
+
+    public String getNoNeededSumMessage(int sum) {
+        return ERROR_SIGN + " Нельзя выдать данную сумму ("
+            + String.valueOf(sum) + ") " + ERROR_SIGN;
     }
 
     public String toString() {

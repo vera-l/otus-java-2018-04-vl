@@ -24,7 +24,7 @@ public class ATMTests {
     }
 
     @Test
-    public void shouldTakeAnyNumberOfBanknotes() {
+    public void shouldTakeBanknotes() throws NoNeededSumException {
         atm.put(Banknote.N50, 3);
         atm.put(Banknote.N100, 2);
         atm.put(Banknote.N200, 5);
@@ -40,8 +40,8 @@ public class ATMTests {
         Assert.assertEquals(atm.getSlotBanknotesCount(Banknote.N500), 8);
     }
 
-    @Test
-    public void shouldFailForBadNumberOfBanknotes() {
+    @Test(expected = NoNeededSumException.class)
+    public void shouldFailForBadNumberOfBanknotes() throws NoNeededSumException {
         atm.put(Banknote.N50, 4);
         atm.put(Banknote.N100, 7);
         atm.put(Banknote.N200, 2);
@@ -49,10 +49,18 @@ public class ATMTests {
 
         Assert.assertEquals(atm.getSum(), 5300);
 
-        Assert.assertEquals(atm.take(420), -1);
+        atm.take(420);
+    }
+
+    @Test(expected = NoNeededSumException.class)
+    public void shouldFailForTooBigSumOfBanknotes() throws NoNeededSumException {
+        atm.put(Banknote.N50, 4);
+        atm.put(Banknote.N100, 7);
+        atm.put(Banknote.N200, 2);
+        atm.put(Banknote.N500, 8);
+
         Assert.assertEquals(atm.getSum(), 5300);
 
-        Assert.assertEquals(atm.take(10_000), -1);
-        Assert.assertEquals(atm.getSum(), 5300);
+        atm.take(10_000);
     }
 }

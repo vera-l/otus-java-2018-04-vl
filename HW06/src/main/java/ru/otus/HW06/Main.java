@@ -16,17 +16,30 @@ class Main {
 
         int NEEDED_SUM = 4750;
         System.out.println("Затем забираем из банкомата " + String.valueOf(NEEDED_SUM) + ": ");
-        atm.take(NEEDED_SUM);
+        try {
+            atm.take(NEEDED_SUM);
+        } catch (NoNeededSumException e) {
+
+        }
+
         System.out.println(atm);
 
         NEEDED_SUM = 2320;
         System.out.println("Затем забираем из банкомата еще " + String.valueOf(NEEDED_SUM) + ": ");
-        atm.take(NEEDED_SUM);
+        try {
+            atm.take(NEEDED_SUM);
+        } catch (NoNeededSumException e) {
+            System.out.println(atm.getNoNeededSumMessage(NEEDED_SUM));
+        }
         System.out.println(atm);
 
         NEEDED_SUM = 100_000;
         System.out.println("Затем забираем из банкомата еще " + String.valueOf(NEEDED_SUM) + ": ");
-        atm.take(NEEDED_SUM);
+        try {
+            atm.take(NEEDED_SUM);
+        } catch (NoNeededSumException e) {
+            System.out.println(atm.getNoNeededSumMessage(NEEDED_SUM));
+        }
         System.out.println(atm);
     }
 
