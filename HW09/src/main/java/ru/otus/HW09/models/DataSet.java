@@ -1,18 +1,13 @@
 package ru.otus.HW09.models;
 
-import ru.otus.HW09.annotations.Column;
-import ru.otus.HW09.annotations.Id;
+import javax.persistence.MappedSuperclass;
 
+
+@MappedSuperclass
 public abstract class DataSet {
-    @Id
-    @Column
-    Long id;
 
-    public Long getId() {
-        return id;
-    }
+    public abstract Long getId();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public abstract void setId(Long id);
+
 }
