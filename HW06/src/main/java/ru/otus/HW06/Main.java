@@ -21,7 +21,7 @@ class Main {
         try {
             atm.take(NEEDED_SUM);
         } catch (NoNeededSumException e) {
-
+            System.out.print(e.getMessage());
         }
 
         System.out.println(atm);
@@ -31,7 +31,7 @@ class Main {
         try {
             atm.take(NEEDED_SUM);
         } catch (NoNeededSumException e) {
-            System.out.println(atm.getNoNeededSumMessage(NEEDED_SUM));
+            System.out.println(e.getMessage());
         }
         System.out.println(atm);
 
@@ -40,7 +40,7 @@ class Main {
         try {
             atm.take(NEEDED_SUM);
         } catch (NoNeededSumException e) {
-            System.out.println(atm.getNoNeededSumMessage(NEEDED_SUM));
+            System.out.println(e.getMessage());
         }
         System.out.println(atm);
     }

@@ -5,14 +5,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ATM {
-    private final ArrayList<Slot> slots;
-    private HashMap<Banknote, Integer> initState;
+public class ATM implements Observer {
+    private final List<Slot> slots;
+    private Map<Banknote, Integer> initState;
     private final List<Banknote> FACES_VALUES = Arrays.asList(Banknote.values());
     private final static String MONEY_SIGN = "\uD83D\uDCB5";
-    private final static String ERROR_SIGN = "\uD83D\uDEAB";
     private final static String PRINT_DELIMITER = "\n------------------\n";
 
     public ATM(HashMap<Banknote, Integer> initState) {
@@ -35,6 +35,11 @@ public class ATM {
                 countFromInitState == null ? 0 : countFromInitState
             );
         }
+    }
+
+    @Override
+    public void handle() {
+        reset();
     }
 
     public int getSum() {
@@ -81,7 +86,7 @@ public class ATM {
 
     public int take(int sum) throws NoNeededSumException {
         if (sum > getSum()) {
-            throw new NoNeededSumException();
+            throw new NoNeededSumException(sum);
         }
 
         HashMap countToSlots = getCountToSlotsMapForSum(sum);
@@ -112,6 +117,7 @@ public class ATM {
 
     private HashMap<Slot, Integer> getCountToSlotsMapForSum(int sum) throws NoNeededSumException {
         HashMap<Slot, Integer> countToSlots = new HashMap<>();
+        int initSum = sum;
 
         for(Slot slot : slots) {
             int faceValue = slot.getBanknote().getFaceValue();
@@ -130,7 +136,7 @@ public class ATM {
         }
 
         if (sum != 0) {
-            throw new NoNeededSumException();
+            throw new NoNeededSumException(initSum);
         }
 
         return countToSlots;
@@ -142,11 +148,6 @@ public class ATM {
                 state.get(slot.getBanknote()) == null ? 0 : state.get(slot.getBanknote())
             )
         );
-    }
-
-    public String getNoNeededSumMessage(int sum) {
-        return ERROR_SIGN + " Нельзя выдать данную сумму ("
-            + String.valueOf(sum) + ") " + ERROR_SIGN;
     }
 
     public String toString() {

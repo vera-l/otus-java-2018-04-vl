@@ -33,7 +33,7 @@ public class Slot {
 
     public void take(int itemsCount) throws NoNeededSumException {
         if (this.count < itemsCount) {
-            throw new NoNeededSumException();
+            throw new NoNeededSumException(itemsCount + banknote.getFaceValue());
         }
         this.count -= itemsCount;
     }

@@ -89,7 +89,7 @@ public class ATMDepartmentTests {
         atm1.take(200);
 
         // Восстанавливаем начальное состояние всех atm
-        atmDepartment.resetAll();
+        atmDepartment.notifyObservers();
 
         Assert.assertTrue(atm1.isStateEquals(atm1InitState));
         Assert.assertTrue(atm2.isStateEquals(atm2InitState));
