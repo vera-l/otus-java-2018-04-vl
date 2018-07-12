@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ATM implements Observer {
+public class ATM implements ResetObserver {
     private final List<Slot> slots;
     private Map<Banknote, Integer> initState;
     private final List<Banknote> FACES_VALUES = Arrays.asList(Banknote.values());
