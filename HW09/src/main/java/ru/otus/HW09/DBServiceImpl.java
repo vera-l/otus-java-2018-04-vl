@@ -8,10 +8,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-class DBServiceImpl implements DBService {
+public class DBServiceImpl implements DBService {
+
     private UsersDAO usersDAO;
 
-    DBServiceImpl() {
+    public DBServiceImpl() {
         try {
             this.usersDAO = new UsersDAO(
                 ConnectionUtil.getInstance().getConnection()
