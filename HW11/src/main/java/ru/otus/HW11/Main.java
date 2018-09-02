@@ -1,6 +1,8 @@
 package ru.otus.HW11;
 
 import ru.otus.HW09.models.UserDataSet;
+import ru.otus.HW11.cache.CacheEngineImpl;
+
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -11,7 +13,9 @@ class Main  {
     public static void main(String... args) throws ClassNotFoundException, SQLException,
         IOException {
 
-        DBServiceCachedImpl dbService = new DBServiceCachedImpl();
+        DBServiceCachedImpl dbService = new DBServiceCachedImpl(
+            new CacheEngineImpl()
+        );
 
         // Add users
         UserDataSet user1 = new UserDataSet("John", 25);

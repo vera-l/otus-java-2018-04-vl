@@ -3,26 +3,20 @@ package ru.otus.HW11;
 import ru.otus.HW09.DBServiceImpl;
 import ru.otus.HW09.models.UserDataSet;
 import ru.otus.HW11.cache.CacheEngine;
-import ru.otus.HW11.cache.CacheEngineImpl;
+import java.util.List;
 
 public class DBServiceCachedImpl extends DBServiceImpl {
 
     private CacheEngine<Long, UserDataSet> cache;
 
-    public DBServiceCachedImpl() {
+    public DBServiceCachedImpl(CacheEngine cache) {
         super();
-        cache = new CacheEngineImpl();
+        this.cache = cache;
     }
 
-    public DBServiceCachedImpl(Integer cacheMaxSize) {
-        super();
-        cache = new CacheEngineImpl();
+    public DBServiceCachedImpl(CacheEngine cache, Integer cacheMaxSize) {
+        this(cache);
         cache.setMaxSize(cacheMaxSize);
-    }
-
-    public DBServiceCachedImpl(Long cacheTimeOfLife, Long cacheTimeOfIdle) {
-        super();
-        cache = new CacheEngineImpl(cacheTimeOfLife, cacheTimeOfIdle);
     }
 
     @Override
@@ -33,6 +27,16 @@ public class DBServiceCachedImpl extends DBServiceImpl {
             cache.put(userId, result);
         }
         return result;
+    }
+
+    @Override
+    public List<UserDataSet> readAll() {
+        List<UserDataSet> users = super.readAll();
+        users.forEach(
+            user -> cache.put(user.getId(), user)
+        );
+
+        return users;
     }
 
     public int getCacheSize() {

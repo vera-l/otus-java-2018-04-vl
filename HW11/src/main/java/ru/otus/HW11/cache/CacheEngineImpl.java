@@ -61,7 +61,7 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
     @Override
     public V get(K key) {
-        if (cache.containsKey(key)) {
+        if (cache.containsKey(key) && cache.get(key).getValue() != null) {
             hitsCount++;
             cache.get(key).setLastAccessTime(System.currentTimeMillis());
             return cache.get(key).getValue();

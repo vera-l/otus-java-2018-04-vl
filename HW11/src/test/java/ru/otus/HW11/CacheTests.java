@@ -3,6 +3,7 @@ package ru.otus.HW11;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.otus.HW09.models.UserDataSet;
+import ru.otus.HW11.cache.CacheEngineImpl;
 
 public class CacheTests {
 
@@ -10,7 +11,9 @@ public class CacheTests {
 
     @Test
     public void eternalCache() {
-        dbService = new DBServiceCachedImpl();
+        dbService = new DBServiceCachedImpl(
+            new CacheEngineImpl()
+        );
 
         UserDataSet user1 = new UserDataSet("Mike", 27);
 
@@ -38,7 +41,9 @@ public class CacheTests {
     public void eternalCacheWithMaxSize() {
         int cacheMaxSize = 5;
 
-        dbService = new DBServiceCachedImpl(cacheMaxSize);
+        dbService = new DBServiceCachedImpl(
+            new CacheEngineImpl(), cacheMaxSize
+        );
 
         dbService.save(new UserDataSet("Mike", 27));
         dbService.save(new UserDataSet("Maria", 23));
