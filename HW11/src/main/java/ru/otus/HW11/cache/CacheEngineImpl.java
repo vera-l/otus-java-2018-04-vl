@@ -1,5 +1,6 @@
 package ru.otus.HW11.cache;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -123,6 +124,21 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
     private boolean isT1BeforeT2(long t1, long t2) {
         return t1 < t2 + TIME_THRESHOLD_MS;
+    }
+
+    public HashMap<String, Object> getStatistics() {
+        HashMap<String, Object> data = new HashMap();
+
+        data.put("maxSize", String.valueOf(maxSize));
+        data.put("isEternal", String.valueOf(isEternal));
+        data.put("timeOfLife", String.valueOf(timeOfLife));
+        data.put("timeOfIdle", String.valueOf(timeOfIdle));
+
+        data.put("size", String.valueOf(size()));
+        data.put("hitsCount", String.valueOf(hitsCount));
+        data.put("missesCount", String.valueOf(missesCount));
+
+        return data;
     }
 
 }

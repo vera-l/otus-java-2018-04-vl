@@ -1,5 +1,7 @@
 package ru.otus.HW11.cache;
 
+import java.util.HashMap;
+
 public interface CacheEngine<K, V> {
 
     void put(K key, V value);
@@ -19,5 +21,7 @@ public interface CacheEngine<K, V> {
     int getMissesCount();
 
     void dispose();
+
+    HashMap<String, Object> getStatistics();
 
 }
