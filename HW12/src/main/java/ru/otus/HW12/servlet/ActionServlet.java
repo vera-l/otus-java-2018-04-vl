@@ -18,10 +18,16 @@ public class ActionServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        UserDataSet user = new UserDataSet("John", 25);
-        dbService.save(user);
-        dbService.read(id);
-        dbService.read(id++);
+        String login = (String) request.getSession().getAttribute("login");
+
+        if(login != null) {
+            UserDataSet user = new UserDataSet("John", 25);
+            dbService.save(user);
+            dbService.read(id);
+            dbService.read(id++);
+        } else {
+            response.sendRedirect("/");
+        }
     }
 
 }

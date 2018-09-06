@@ -20,8 +20,8 @@ public class WebServer {
 
     private final static String PUBLIC_HTML = "public_html";
 
-    private Server server;
-    private CacheEngine<Integer, UserDataSet> cacheEngine;
+    private final Server server;
+    private final CacheEngine<Integer, UserDataSet> cacheEngine;
 
     public WebServer(CacheEngine cacheEngine, DBService dbService, int port) throws IOException {
         this.cacheEngine = cacheEngine;
