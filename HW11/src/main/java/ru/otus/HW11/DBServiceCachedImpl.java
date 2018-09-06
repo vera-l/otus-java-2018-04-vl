@@ -14,8 +14,19 @@ public class DBServiceCachedImpl extends DBServiceImpl {
         this.cache = cache;
     }
 
+    public DBServiceCachedImpl(CacheEngine cache, String dbUrl, String dbUser, String dbPassword) {
+        super(dbUrl, dbUser, dbPassword);
+        this.cache = cache;
+    }
+
     public DBServiceCachedImpl(CacheEngine cache, Integer cacheMaxSize) {
         this(cache);
+        cache.setMaxSize(cacheMaxSize);
+    }
+
+    public DBServiceCachedImpl(CacheEngine cache, Integer cacheMaxSize,
+                               String dbUrl, String dbUser, String dbPassword) {
+        this(cache, dbUrl, dbUser, dbPassword);
         cache.setMaxSize(cacheMaxSize);
     }
 

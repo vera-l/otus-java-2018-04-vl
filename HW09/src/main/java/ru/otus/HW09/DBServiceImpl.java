@@ -22,6 +22,16 @@ public class DBServiceImpl implements DBService {
         }
     }
 
+    public DBServiceImpl(String dbUrl, String dbUser, String dbPassword) {
+        try {
+            this.usersDAO = new UsersDAO(
+                ConnectionUtil.getInstance(dbUrl, dbUser, dbPassword).getConnection()
+            );
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println(e.getStackTrace());
+        }
+    }
+
     @Override
     public UserDataSet read(long userId) {
         try {

@@ -25,9 +25,21 @@ public class ConnectionUtil {
         connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
     }
 
+    private ConnectionUtil(String dbUrl, String dbUser, String dbPassword) throws ClassNotFoundException, SQLException {
+        Class.forName("org.postgresql.Driver");
+        connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+    }
+
     public static ConnectionUtil getInstance() throws ClassNotFoundException, IOException, SQLException {
         if (instance == null) {
             instance = new ConnectionUtil();
+        }
+        return instance;
+    }
+
+    public static ConnectionUtil getInstance(String dbUrl, String dbUser, String dbPassword) throws ClassNotFoundException, SQLException {
+        if (instance == null) {
+            instance = new ConnectionUtil(dbUrl, dbUser, dbPassword);
         }
         return instance;
     }
